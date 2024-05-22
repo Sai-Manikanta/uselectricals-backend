@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     enum: ['admin', 'teamMember'],
     default: 'teamMember',
     required: true
+  },
+  assignedToProjects: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'Project', 
   }
 });
 

@@ -22,7 +22,12 @@ const createCustomer = async (req, res) => {
 
 const getAllCUstomers = async (req, res) => {
   try {
-      const customers = await Customer.find();
+      const customers = await Customer.find().populate({
+        path: 'projects',
+        select: '-_id name'
+      });
+      
+    //   .populate('projects');
 
       res.json({
           message: 'Fetched all customers successfully',

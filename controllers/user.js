@@ -73,7 +73,7 @@ const adminLoginController = async (req, res) => {
         //     return res.status(401).json({ message: 'Invalid credentials' });
         // }
 
-        if(password != user.password){
+        if (password != user.password) {
             console.log(password, user.password);
             return res.status(401).json({ message: 'Invalid credentials' });
         }
@@ -116,7 +116,7 @@ const editTeamMember = async (req, res) => {
 
         // console.log("password:", password);
 
-         // Hash password
+        // Hash password
         //  const hashedPassword = await bcrypt.hash(password, 10);
 
         //  console.log("Hashed Password", hashedPassword)
@@ -136,7 +136,11 @@ const editTeamMember = async (req, res) => {
 
 const getTeamList = async (req, res) => {
     try {
-        const users = await User.find({ role: 'teamMember' }, 'name mobileNumber');
+        const users = await User.find({ role: 'teamMember' }, 'name mobileNumber').populate({
+            path: 'assignedToProjects',
+            select: '-_id name mobileNumber'
+        });
+
         res.json({
             message: 'Team list fetched successfully',
             data: users

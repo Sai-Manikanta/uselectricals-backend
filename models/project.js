@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Customer = require('./customer');
+const User = require('./user');
 
 const projectSchema = new mongoose.Schema({
     name: {
@@ -11,12 +13,14 @@ const projectSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    customerName: {
-        type: String,
+    customer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Customer',
         required: true
     },
     team: {
-        type: [String]
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User', 
     },
     projectStartDate: {
         type: Date,
@@ -24,12 +28,46 @@ const projectSchema = new mongoose.Schema({
     }
 });
 
-// yourSchema.pre('save', function (next) {
-//     if (!this.projectStartDate) {
-//         this.projectStartDate = new Date();
+projectSchema.pre('save', async function(next) {
+    try {
+
+        await Customer.findByIdAndUpdate(this.customer, { $push: { projects: this._id } });
+
+        await User.updateMany(
+            { _id: { $in: this.team } },
+            { $push: { assignedToProjects: this._id } }
+        );
+
+        next();
+
+    } catch (error) {
+        console.error('Error:', error);
+        next(error); 
+    }
+});
+
+// projectSchema.post('save', async function(doc, next) {
+//     try {
+//         console.log('Project saved with ID:', doc._id);
+
+//         // Update the customer with the project ID
+//         await Customer.findByIdAndUpdate(doc.customer, { $push: { projects: doc._id } });
+
+//         // Update each user in the team array with the project ID
+//         const result = await User.updateMany(
+//             { _id: { $in: doc.team } },
+//             { $push: { projects: doc._id } }
+//         );
+
+//         console.log('Users updated:', result);
+
+//         next();
+//     } catch (error) {
+//         console.error('Error:', error);
+//         next(error); 
 //     }
-//     next();
 // });
+
 
 const Project = mongoose.model('Project', projectSchema);
 

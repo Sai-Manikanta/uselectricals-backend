@@ -6,17 +6,19 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/user');
 const projectRoutes = require('./routes/project');
 const customerRoutes = require('./routes/customer');
+const toolRoutes = require('./routes/tool');
 
 const app = express();
 
 // const corsOptions = {
 //     origin: 'http://example.com',
 // }
+
 app.use(cors());
 app.use(express.json());
 
 // Connection URI
-const uri = 'mongodb+srv://us-electricals:T1lbGQP7WSs9M9Gg@uselectricals.pr972cz.mongodb.net/USElectricals'; 
+const uri = 'mongodb+srv://us-electricals:T1lbGQP7WSs9M9Gg@uselectricals.pr972cz.mongodb.net/uselectricalsecperiment'; 
 
 // Connect to MongoDB
 mongoose.connect(uri)
@@ -31,6 +33,7 @@ mongoose.connect(uri)
 app.use('/api/v1/auth', userRoutes);
 app.use('/api/v1/project', projectRoutes);
 app.use('/api/v1/customer', customerRoutes);
+app.use('/api/v1/tool', toolRoutes);
 
 const PORT = process.env.PORT || 9000;
 

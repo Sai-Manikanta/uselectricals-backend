@@ -11,9 +11,10 @@ const customerSchema = new mongoose.Schema({
         min: 1000000000, // Minimum value (10-digit number)
         max: 9999999999  // Maximum value (10-digit number)
     },
-    projects: {
-        type: [String]
-    }
+    projects:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Project'
+    }]
 });
 
 const Customer = mongoose.model('Customer', customerSchema);
