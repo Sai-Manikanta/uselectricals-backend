@@ -8,6 +8,7 @@ const projectRoutes = require('./routes/project');
 const customerRoutes = require('./routes/customer');
 const toolRoutes = require('./routes/tool');
 const materialRoutes = require('./routes/material');
+const workRoutes = require('./routes/work');
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/api/v1/project', projectRoutes);
 app.use('/api/v1/customer', customerRoutes);
 app.use('/api/v1/tool', toolRoutes);
 app.use('/api/v1/material', materialRoutes)
+app.use('/api/v1/work', workRoutes)
 
 const PORT = process.env.PORT || 9000;
 
