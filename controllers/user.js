@@ -88,6 +88,44 @@ const adminLoginController = async (req, res) => {
     }
 }
 
+const teamLogin = async (req, res) => {
+    const { mobileNumber, password } = req.body;
+
+    try {
+        // Find the user by mobileNumber
+        const user = await User.findOne({ mobileNumber });
+
+        // If user not found, return error
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        if (user.role != "teamMember") {
+            return res.status(401).json({ message: 'Not an teamMember' });
+        }
+
+        // Compare hashed password with provided password
+        // const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // if (!passwordMatch) {
+        //     return res.status(401).json({ message: 'Invalid credentials' });
+        // }
+
+        if (password != user.password) {
+            console.log(password, user.password);
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
+        // Create JWT token with user mobileNumber and role
+        const token = jwt.sign({ mobileNumber: user.mobileNumber, role: user.role }, 'shashgy2g12517v', { expiresIn: '1h' });
+
+        res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+}
+
 const deleteTeamMember = async (req, res) => {
     try {
         const id = req.params.id;
@@ -177,5 +215,6 @@ module.exports = {
     deleteTeamMember,
     editTeamMember,
     getTeamList,
-    getTeamMember
+    getTeamMember,
+    teamLogin
 }
