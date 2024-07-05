@@ -193,7 +193,7 @@ const getTeamMember = async (req, res) => {
         // Find the user by ID
         const user = await User.findById(req.params.id).populate({
             path: 'assignedToProjects',
-        });
+         });
 
         // Check if the user exists
         if (!user) {
@@ -222,6 +222,11 @@ const getTeamListWithDailyTasksData = async (req, res) => {
         const today = getTodayDate();
 
         const usersWithTasks = await User.aggregate([
+            {
+                $match: {
+                    role: 'teamMember'
+                }
+            },
             {
                 $lookup: {
                     from: 'dailytasks',
