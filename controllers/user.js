@@ -191,7 +191,9 @@ const getTeamList = async (req, res) => {
 const getTeamMember = async (req, res) => {
     try {
         // Find the user by ID
-        const user = await User.findById(req.params.id);
+        const user = await User.findById(req.params.id).populate({
+            path: 'assignedToProjects',
+        });
 
         // Check if the user exists
         if (!user) {
