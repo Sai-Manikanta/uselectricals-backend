@@ -10,6 +10,7 @@ const toolSchema = new Schema({
 
 const materialSchema = new Schema({
     material: { type: mongoose.Schema.Types.ObjectId, ref: 'Material', required: true },
+    typeOrSize: { type: String, required: true },
     quantity: { type: Number, required: true },
     tookStatus: { type: Boolean, default: false },
     returnStatus: { type: Boolean, default: false },
@@ -28,7 +29,7 @@ const projectSchema = new Schema({
 });
 
 const dailyTaskSchema = new Schema({
-    date: { type: Date, required: true },
+    date: { type: Date, default: Date.now },
     teamMemberName: { type: String, required: true },
     teamMember: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     assignedProjects: [projectSchema]
@@ -39,35 +40,35 @@ const DailyTask = mongoose.model('DailyTask', dailyTaskSchema);
 module.exports = DailyTask;
 
 
-// const data = {
-//     date: 'date',
-//     teamMemberName: 'String',
-//     teamMember: 'mongoose object _id',
-//     assignedProjects: [
-//         {
-//             project: 'mongoose object _id',
-//             assignedWorks: [
-//                 {
-//                     work: 'mongoose object _id',
-//                     assignedTools: [
-//                         {
-//                            tool: 'mongoose object id',
-//                            tookStatus: false,
-//                            returnStatus: false,
-//                            returnImages: ['string', 'string']
-//                         }
-//                     ],
-//                     assignedMaterials: [
-//                         {
-//                             material: 'mongoose object id',
-//                             quantity: 'number',
-//                             tookStatus: false,
-//                             returnStatus: false,
-//                             returnImages: ['string', 'string']
-//                          }
-//                     ]
-//                 }
-//             ]
-//         }
-//     ],
-// }
+const data = {
+    date: 'date',
+    teamMemberName: 'String',
+    teamMember: 'mongoose object _id',
+    assignedProjects: [
+        {
+            project: 'mongoose object _id',
+            assignedWorks: [
+                {
+                    work: 'mongoose object _id',
+                    assignedTools: [
+                        {
+                           tool: 'mongoose object id',
+                           tookStatus: false,
+                           returnStatus: false,
+                           returnImages: ['string', 'string']
+                        }
+                    ],
+                    assignedMaterials: [
+                        {
+                            material: 'mongoose object id',
+                            quantity: 'number',
+                            tookStatus: false,
+                            returnStatus: false,
+                            returnImages: ['string', 'string']
+                         }
+                    ]
+                }
+            ]
+        }
+    ],
+}

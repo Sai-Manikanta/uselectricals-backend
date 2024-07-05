@@ -209,6 +209,50 @@ const getTeamMember = async (req, res) => {
     }
 }
 
+const getTodayDate = () => {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0); // Set to midnight UTC
+    return today;
+  };
+
+const getTeamListWithDailyTasksData = async (req, res) => {
+    try {
+        const today = getTodayDate();
+
+        const usersWithTasks = await User.aggregate([
+            {
+                $lookup: {
+                    from: 'dailytasks',
+                    localField: '_id',
+                    foreignField: 'teamMember',
+                    as: 'todayTasks'
+                }
+            },
+            {
+                $addFields: {
+                    todayTasks: {
+                    $filter: {
+                      input: '$todayTasks',
+                      as: 'todayTasks',
+                      cond: { $eq: [{ $dateToString: { format: '%Y-%m-%d', date: '$$todayTasks.date' } }, { $dateToString: { format: '%Y-%m-%d', date: today } }] }
+                    }
+                  }
+                }
+              }
+        ]);
+
+        res.json({
+            message: 'Success',
+            data: {
+                team: usersWithTasks
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+}
+
+
 module.exports = {
     createTeamMember,
     adminLoginController,
@@ -216,5 +260,6 @@ module.exports = {
     editTeamMember,
     getTeamList,
     getTeamMember,
-    teamLogin
+    teamLogin,
+    getTeamListWithDailyTasksData
 }
