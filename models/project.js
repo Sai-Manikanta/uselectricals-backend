@@ -7,6 +7,10 @@ const workSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    workId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Work', 
+    },
     completionPercentage: {
         type: Number,
         default: 0
@@ -48,7 +52,6 @@ const projectSchema = new mongoose.Schema({
 
 projectSchema.pre('save', async function(next) {
     try {
-
         await Customer.findByIdAndUpdate(this.customer, { $push: { projects: this._id } });
 
         await User.updateMany(
